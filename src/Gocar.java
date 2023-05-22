@@ -1,35 +1,23 @@
 import java.util.concurrent.Semaphore;
 
 public class Gocar implements Runnable {
-    private final int car;
-    private final Semaphore name;
+    private final int number;
+    private final Semaphore semaphore;
 
-    public Gocar(int car, Semaphore name) {
-        this.car = car;
-        this.name = name;
+    public Gocar(int number, Semaphore semaphore) {
+        this.number = number;
+        this.semaphore = semaphore;
         new Thread(this).start();
     }
-
     @Override
     public void run() {
         try {
-            name.acquire();
-            for (int i = 0; i < car; i++) {
-                if (Paking.count<=Paking.maxCount){
-                    Paking.count++;
-                }
-                else  {
-                    Paking.queue++;
-                }
-                Thread.sleep(10);
-            }
+            semaphore.acquire();
+            System.out.println("Заехала "+number+" машина");
+            Thread.sleep(2000);
+            System.out.println("Выехала "+number+" машина");
+            semaphore.release();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("На парковке "+Paking.count);
-        System.out.println("В очереди "+Paking.queue);
-        System.out.println();
-        name.release();
-    }
-    }
-
+    }}
